@@ -3,15 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GekkoTrading.Controllers
 {
     public class HomeController : Controller
     {
+
         public IActionResult Index()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Home", "Home");
+            }
+            else
+            return View();
+        }
+
+        public IActionResult Home()
         {
             return View();
         }
+
 
         public IActionResult About()
         {
@@ -20,14 +33,20 @@ namespace GekkoTrading.Controllers
             return View();
         }
 
-        public IActionResult Contact()
+        [Authorize]
+        public IActionResult TheTool()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "The tool.";
 
             return View();
         }
 
         public IActionResult Error()
+        {
+            return View();
+        }
+
+        public IActionResult FAQ()
         {
             return View();
         }
