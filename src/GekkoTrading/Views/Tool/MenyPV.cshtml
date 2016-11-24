@@ -1,42 +1,38 @@
 ﻿@model string[]
 
-<div class="row">
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle FullWidthBtn" type="button" data-toggle="dropdown">
+        Indicators
+        <span class="caret"></span>
+    </button>
 
-    <div class="col-sm-4 col-lg-2">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle FullWidthBtn" type="button" data-toggle="dropdown">
-                Indicators
-                <span class="caret"></span>
-            </button>
+    <ul class="dropdown-menu">
+        <li><a href="#">MA</a></li>
+        <li><a href="#">SIS</a></li>
+        <li><a href="#">BRI</a></li>
+    </ul>
+</div>
+<br />
 
-            <ul class="dropdown-menu">
-                <li><a href="#">MA</a></li>
-                <li><a href="#">SIS</a></li>
-                <li><a href="#">BRI</a></li>
-            </ul>
-        </div>
-        <br />
+<div class="list-group hidden-xs">
+    <span href="#" class="list-group-item" style="font-weight:700">
+        Instruments
+    </span>
+    @foreach (var item in Model)
+    {
+        <a href="#" class="list-group-item">@item</a>
+    }
+</div>
 
-        <div class="list-group hidden-xs">
-            <span href="#" class="list-group-item">
-                Instruments
-            </span>
-            @foreach (var item in Model)
-            {
-                <a href="#" class="list-group-item">@item</a>
-            }
-        </div>
-
-        <div class="dropdown visible-xs">
-            <button class="btn btn-default dropdown-toggle FullWidthBtn" type="button" data-toggle="dropdown">
-                Instruments
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">GULD</a></li>
-                <li><a href="#">SILVER</a></li>
-                <li><a href="#">PLATINUM</a></li>
-            </ul>
-        </div>
-    </div>
+<div class="dropdown visible-xs">
+    <button class="btn btn-default dropdown-toggle FullWidthBtn" type="button" data-toggle="dropdown">
+        Instruments
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var item in Model)
+     {
+            <li><a href="#">@item</a></li>
+     }
+    </ul>
 </div>

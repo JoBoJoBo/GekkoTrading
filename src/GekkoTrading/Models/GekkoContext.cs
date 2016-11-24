@@ -31,5 +31,16 @@ namespace GekkoTrading.Models.Entities
 
             return viewModel;
         }
+
+        public async Task<ResultVM> GetResult(MovingAverageVM viewModel)
+        {
+            //Hämta data baserat på viewmodel
+            var data = PriceData.Where(x => x.Timestamp.CompareTo(viewModel.StartDate) >= 0
+            && x.Timestamp.CompareTo(viewModel.EndDate) <= 0).ToList();
+
+
+            
+            return null;
+        }
     }
 }
