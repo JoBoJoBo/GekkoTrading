@@ -1,4 +1,5 @@
 ﻿using GekkoTrading.Models.UserViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,22 @@ namespace GekkoTrading.Models.Entities
 {
     public partial class GekkoContext
     {
-        public GekkoContext(DbContextOptions<GekkoContext> options) : base(options)
-        {
+        private readonly UserManager<ApplicationUser> _userManager;
 
+        public GekkoContext(DbContextOptions<GekkoContext> options, UserManager<ApplicationUser> userManager) : base(options)
+        {
+            _userManager = userManager;
         }
 
-        public HomeVM GetUserHomeVM(string username)
+        public async Task<HomeVM> GetUserHomeVM(string username)
         {
             var viewModel = new HomeVM();
 
-            var tmpUser = AspNetUsers.FirstOrDefault(x => x.UserName == username);
+            var tmpUser = await _userManager.FindByNameAsync(username);
 
             viewModel.Username = tmpUser.UserName;
 
-            viewModel.UserHistory = this.Cases
+            viewModel.UserHistory = Cases
                 .Where(c => c.UserId == tmpUser.Id)
                 .ToList();
 

@@ -10,7 +10,11 @@ namespace GekkoTrading.Controllers
 {
     public class HomeController : Controller
     {
-
+        GekkoContext context;
+        public HomeController(GekkoContext context)
+        {
+            this.context = context;
+        }
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -21,10 +25,10 @@ namespace GekkoTrading.Controllers
             return View();
         }
 
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
         {
             string username = User.Identity.Name;
-            var viewModel = GekkoContext.GetUserHomeVM(username);
+            var viewModel = await context.GetUserHomeVM(username);
 
             return View(viewModel);
         }
