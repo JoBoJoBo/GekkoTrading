@@ -13,6 +13,7 @@ using GekkoTrading.Data;
 using GekkoTrading.Models;
 using GekkoTrading.Services;
 using Microsoft.AspNetCore.Mvc;
+using GekkoTrading.Models.Entities;
 
 namespace GekkoTrading
 {
@@ -46,8 +47,12 @@ namespace GekkoTrading
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
+            var connString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<GekkoContext>(options =>
+                options.UseSqlServer(connString));
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
