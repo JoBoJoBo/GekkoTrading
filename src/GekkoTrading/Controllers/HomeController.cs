@@ -24,7 +24,7 @@ namespace GekkoTrading.Controllers
             else
             return View();
         }
-
+        [Authorize]
         public async Task<IActionResult> Home()
         {
             string username = User.Identity.Name;
