@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using GekkoTrading.Models.Entities;
 
 namespace GekkoTrading.Controllers
 {
@@ -14,7 +15,7 @@ namespace GekkoTrading.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Home", "Home");
+                return RedirectToAction(nameof(HomeController.Home));
             }
             else
             return View();
@@ -22,7 +23,10 @@ namespace GekkoTrading.Controllers
 
         public IActionResult Home()
         {
-            return View();
+            string username = User.Identity.Name;
+            var viewModel = GekkoContext.GetUserHomeVM(username);
+
+            return View(viewModel);
         }
 
 
