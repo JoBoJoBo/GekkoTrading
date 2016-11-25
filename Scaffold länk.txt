@@ -1,0 +1,14 @@
+368696859-l49f1rak3d15sn0j1lj6g9u09mb7t2t3.apps.googleusercontent.com
+
+dotnet user-secrets set Authentication:Google:ClientID 368696859-l49f1rak3d15sn0j1lj6g9u09mb7t2t3.apps.googleusercontent.com
+dotnet user-secrets set Authentication:Google:ClientSecret pO3RJCowedSXX1bRUBvZXj4J
+
+
+
+Scaffold-DbContext "Data Source=.;Initial Catalog=Gekko;Persist Security Info=True;User ID=sa;Password=kingpattzor" Microsoft.EntityFrameworkCore.SqlServer -OutputDir "Models/Entities" –Force –Context "GekkoContext"
+
+
+Uppdatera databasen
+Uppdatera feedern med data
+Ladda ner ny data, ladda upp ny data
+Refresha context filerna för EF

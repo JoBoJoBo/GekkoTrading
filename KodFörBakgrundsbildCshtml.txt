@@ -1,0 +1,24 @@
+Kod för att lägga till bakgrundsbild i en .cshtml fil i Views/Home/Home.cshtml i detta fall.
+
+@model GekkoTrading.Models.UserViewModels.HomeVM
+
+<div>
+    @Model.Username
+    <br />
+    @Model.UserHistory[0].BestMaSize1
+    <br />
+
+  
+
+
+</div>
+<style>
+    div#kalle {
+    width: auto;
+    height: 600px;
+    border: 1px solid black;
+    background-size:60px;
+}
+</style>
+<div id="kalle" style="background-image: url('http://vignette2.wikia.nocookie.net/wallstreet/images/d/d5/Wall-street.jpg/revision/latest?cb=20151223212442'); background-repeat: no-repeat"></div>
+

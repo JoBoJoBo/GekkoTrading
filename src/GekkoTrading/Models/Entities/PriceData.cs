@@ -12,6 +12,8 @@ namespace GekkoTrading.Models.Entities
         public decimal PriceHigh { get; set; }
         public decimal PriceAverage { get; set; }
         public string TimeUnit { get; set; }
+        public decimal OpenPrice { get; set; }
+        public decimal ClosePrice { get; set; }
 
         public virtual Instrument Instrument { get; set; }
     }

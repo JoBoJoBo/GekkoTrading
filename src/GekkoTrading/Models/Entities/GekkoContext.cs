@@ -9,7 +9,7 @@ namespace GekkoTrading.Models.Entities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseSqlServer(@"Data Source=192.168.25.98;Initial Catalog=Gekko;Persist Security Info=True;User ID=sa;Password=kingpattzor");
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=Gekko;Persist Security Info=True;User ID=sa;Password=kingpattzor");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -169,6 +169,10 @@ namespace GekkoTrading.Models.Entities
 
             modelBuilder.Entity<PriceData>(entity =>
             {
+                entity.Property(e => e.ClosePrice).HasColumnType("money");
+
+                entity.Property(e => e.OpenPrice).HasColumnType("money");
+
                 entity.Property(e => e.PriceAverage).HasColumnType("money");
 
                 entity.Property(e => e.PriceHigh).HasColumnType("money");
