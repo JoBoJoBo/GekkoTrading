@@ -30,9 +30,21 @@ namespace GekkoTrading.Models
         
         [Required]
         public int CandeDuration { get; set; }
-        public double Result { get; set; }
+        public decimal Result { get; set; }
         public string Username { get; set; }
 
+        public MovingAverageVM()
+        {
+        }
+        public MovingAverageVM(MovingAverageVM viewModel, int movingAverage1, int movingAverage2, decimal result)
+        {
+            StartDate = viewModel.StartDate;
+            EndDate = viewModel.EndDate;
+            CandeDuration = viewModel.CandeDuration;
+            MovingAverage1 = movingAverage1;
+            MovingAverage2 = movingAverage2;
+            Result = result;
+        }
 
     }
 }

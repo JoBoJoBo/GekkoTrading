@@ -36,6 +36,7 @@ namespace GekkoTrading.Models.Entities
 
         public async Task<ResultVM> GetResult(MovingAverageVM viewModel)
         {
+            var results = new List<MovingAverageVM>();
 
             //Hämta data baserat på viewmodel
             Data = PriceData.Where(x => x.Timestamp.CompareTo(viewModel.StartDate) >= 0
@@ -46,19 +47,27 @@ namespace GekkoTrading.Models.Entities
 
             Data = GetCandleAverage(Data, viewModel.CandeDuration);
 
-            GetMADifference(viewModel.MovingAverage1, viewModel.MovingAverage2);
+            for (int ma1 = 1; ma1 < viewModel.MovingAverage1; ma1++)
+            {
+                for (int ma2 = ma1+1 ; ma2 < viewModel.MovingAverage2; ma2++)
+                {
+                    GetMADifference(ma1, ma2);
 
-            GetIntersections();
+                    GetIntersections(ma2);
 
-            InitiateTransactions();
+                    var result = InitiateTransactions();
 
-            return null;
+                    results.Add( new MovingAverageVM(viewModel, ma1, ma2, result));
+                }
+            }
+            return new ResultVM(results);
         }
 
         private decimal InitiateTransactions()
         {
-            var intersections = Data.Where(x => x.IsIntersection);
-            decimal BankRoll = 0;
+            var intersections = Data.Where(x => x.IsIntersection).ToList();
+            decimal BankRoll = 100;
+            decimal lastOpeningPrice = 0;
 
             if (intersections.Count() > 2)
             {
@@ -66,42 +75,31 @@ namespace GekkoTrading.Models.Entities
 
                 for (int i = 0; i < Data.Count; i++)
                 {
-                    //Köp!
-                    if (Data[i].IsIntersection && i % 2 == 0)
+                    if (Data[i].IsIntersection)
                     {
-                        if (i == 0)
+                        //Köp!
+                        if (counter % 2 == 0 && counter != 0)
                         {
-                            BankRoll -= Data[i + 1].OpeningPrice;
-
+                            BankRoll /= (Data[i + 1].OpeningPrice / lastOpeningPrice);
                         }
-                        else
+                        //Sälj!
+                        else if (counter % 2 != 0)
                         {
-                            BankRoll -= Data[i + 1].OpeningPrice * 2;
+                            BankRoll *= (Data[i + 1].OpeningPrice / lastOpeningPrice);
                         }
+                        lastOpeningPrice = Data[i + 1].OpeningPrice;
+                        counter++;
                     }
-                    //Sälj!
-                    else if (Data[i].IsIntersection && i % 2 != 0)
-                    {
-                        if (counter == intersections.Count() - 2)
-                        {
-                            BankRoll += Data[i + 1].OpeningPrice;
-                        }
-                        else
-                        {
-                            BankRoll += Data[i + 1].OpeningPrice * 2;
-                        }
-                    }
-                    counter++;
                 }
             }
             return BankRoll;
         }
 
-        private void GetIntersections()
+        private void GetIntersections(int value)
         {
             bool isNotFirst = false;
 
-            for (int i = 1; i < Data.Count; i++)
+            for (int i = value; i < Data.Count; i++)
             {
                 if (Data[i - 1].MADifference > 0 && Data[i].MADifference < 0 && isNotFirst)
                 {

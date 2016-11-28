@@ -8,5 +8,12 @@ namespace GekkoTrading.Models
     public class ResultVM
     {
         public List<MovingAverageVM> Results { get; set; }
+        public ResultVM()
+        {
+        }
+        public ResultVM(List<MovingAverageVM> results)
+        {
+            Results = results;
+        }
     }
 }

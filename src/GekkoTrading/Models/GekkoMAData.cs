@@ -22,7 +22,5 @@ namespace GekkoTrading.Models
         public decimal MADifference { get; set; }
         public bool IsIntersection { get; set; }
 
-        public decimal BankRoll { get; set; }
-
     }
 }
