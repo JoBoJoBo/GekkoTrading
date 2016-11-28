@@ -20,7 +20,9 @@ namespace GekkoTrading.Models
         public decimal MA1Average { get; set; }
         public decimal MA2Average { get; set; }
         public decimal MADifference { get; set; }
+        public bool IsIntersection { get; set; }
 
-        
+        public decimal BankRoll { get; set; }
+
     }
 }

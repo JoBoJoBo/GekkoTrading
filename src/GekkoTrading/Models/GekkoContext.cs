@@ -48,8 +48,73 @@ namespace GekkoTrading.Models.Entities
 
             GetMADifference(viewModel.MovingAverage1, viewModel.MovingAverage2);
 
+            GetIntersections();
+
+            InitiateTransactions();
 
             return null;
+        }
+
+        private decimal InitiateTransactions()
+        {
+            var intersections = Data.Where(x => x.IsIntersection);
+            decimal BankRoll = 0;
+
+            if (intersections.Count() > 2)
+            {
+                int counter = 0;
+
+                for (int i = 0; i < Data.Count; i++)
+                {
+                    //Köp!
+                    if (Data[i].IsIntersection && i % 2 == 0)
+                    {
+                        if (i == 0)
+                        {
+                            BankRoll -= Data[i + 1].OpeningPrice;
+
+                        }
+                        else
+                        {
+                            BankRoll -= Data[i + 1].OpeningPrice * 2;
+                        }
+                    }
+                    //Sälj!
+                    else if (Data[i].IsIntersection && i % 2 != 0)
+                    {
+                        if (counter == intersections.Count() - 2)
+                        {
+                            BankRoll += Data[i + 1].OpeningPrice;
+                        }
+                        else
+                        {
+                            BankRoll += Data[i + 1].OpeningPrice * 2;
+                        }
+                    }
+                    counter++;
+                }
+            }
+            return BankRoll;
+        }
+
+        private void GetIntersections()
+        {
+            bool isNotFirst = false;
+
+            for (int i = 1; i < Data.Count; i++)
+            {
+                if (Data[i - 1].MADifference > 0 && Data[i].MADifference < 0 && isNotFirst)
+                {
+                    Data[i].IsIntersection = true;
+                }
+                else if (Data[i - 1].MADifference < 0 && Data[i].MADifference > 0)
+                {
+                    Data[i].IsIntersection = true;
+                    isNotFirst = true;
+                }
+            }
+
+
         }
 
         private List<GekkoMAData> GetCandleAverage(List<GekkoMAData> inData, int duration)
@@ -84,6 +149,8 @@ namespace GekkoTrading.Models.Entities
                 Data[i].MADifference = results[0] - results[1];
                 // Callback end
             }
+
+            Data.RemoveRange(0, ma2);
         }
 
         private async Task<decimal> GetAverage(int ma, int i)
