@@ -30,6 +30,16 @@ namespace GekkoTrading.Controllers
         {
             if (!ModelState.IsValid)
                 return View(viewModel);
+            else if(viewModel.MovingAverage1 >= viewModel.MovingAverage2)
+            {
+                ViewBag.MA2Error = "Moving average 2 must be greater than moving average 1";
+                return View(viewModel);
+            }
+            else if(viewModel.StartDate.CompareTo(viewModel.EndDate) > 0)
+            {
+                ViewBag.DateError = "Does this look like a valid date-interval to you?!";
+                return View(viewModel);
+            }
 
             else return RedirectToAction(nameof(ToolController.Result), viewModel);
 
@@ -38,8 +48,11 @@ namespace GekkoTrading.Controllers
         public async Task<IActionResult> Result(MovingAverageVM viewModel)
         {
             var result = await context.GetResult(viewModel);
-            var bestResult = result.Results.OrderBy(x => x.Result).ToList();
-            return View();
+            var bestResult = result.OrderByDescending(x => x.Result).ToList();
+            var graphData = await context.GetGraphData(bestResult[0]);
+            viewModel.Results = bestResult;
+            viewModel.Graph = graphData;
+            return View("MA", viewModel);
         }
     }
 }

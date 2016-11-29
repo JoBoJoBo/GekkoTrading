@@ -13,24 +13,24 @@
                 <div class="col-sm-6">
                     <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
                         <label asp-for="StartDate"></label><br />
-                        <input type="date" asp-for="StartDate" class="form-control" />
+                        <input type="date" asp-for="StartDate" class="form-control" max="2016-11-22" min="2016-05-23" />
                         <span asp-validation-for="StartDate"></span>
                     </div>
                     <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
                         <label asp-for="EndDate"></label><br />
-                        <input type="date" asp-for="EndDate" class="form-control" />
-                        <span asp-validation-for="EndDate"></span>
+                        <input type="date" asp-for="EndDate" class="form-control" max="2016-11-22" min="2016-05-23" />
+                        <span asp-validation-for="EndDate">@ViewBag.DateError</span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="CandeDuration"></label><br />
-                        <select asp-for="CandeDuration" class="form-control">
+                        <label asp-for="CandleDuration"></label><br />
+                        <select asp-for="CandleDuration" class="form-control">
                             <option>1</option>
                             <option>5</option>
                             <option>15</option>
                             <option>30</option>
                             <option>60</option>
                         </select>
-                        <span asp-validation-for="CandeDuration"></span>
+                        <span asp-validation-for="CandleDuration"></span>
                         <br />
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <label asp-for="MovingAverage2"></label><br />
                         <input placeholder="1-250" asp-for="MovingAverage2" class="form-control" />
-                        <span asp-validation-for="MovingAverage2"></span>
+                        <span asp-validation-for="MovingAverage2">@ViewBag.MA2Error</span>
                     </div>
                     <br />
                     <input class="btn btn-default pull-right" type="submit" />
@@ -55,7 +55,26 @@
     </div>
 </div>
 
-@*@if (Model.Result != 0)
+@if (Model?.Results?.Count > 0)
 {
-    <p>Model.Result</p>
-}*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+
+    <div id="graphdiv"></div>
+            <script type="text/javascript">
+                g = new Dygraph(
+
+                  // containing div
+                  document.getElementById("graphdiv"),
+
+                  // CSV or path to a CSV file.
+                  "@Model.Graph.PrintToCsv()"
+
+                );
+            </script>
+    foreach (var result in Model.Results)
+    {
+
+        <p>@result.MovingAverage1 @result.MovingAverage2 @result.Result</p>
+
+    }
+}

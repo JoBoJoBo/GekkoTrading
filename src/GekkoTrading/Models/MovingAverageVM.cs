@@ -29,22 +29,14 @@ namespace GekkoTrading.Models
         public DateTime EndDate { get; set; }
         
         [Required]
-        public int CandeDuration { get; set; }
-        public decimal Result { get; set; }
+        public int CandleDuration { get; set; }
+        public List<ResultVM> Results { get; set; }
         public string Username { get; set; }
+        public GraphVM Graph { get; set; }
 
         public MovingAverageVM()
         {
+            Results = new List<ResultVM>();
         }
-        public MovingAverageVM(MovingAverageVM viewModel, int movingAverage1, int movingAverage2, decimal result)
-        {
-            StartDate = viewModel.StartDate;
-            EndDate = viewModel.EndDate;
-            CandeDuration = viewModel.CandeDuration;
-            MovingAverage1 = movingAverage1;
-            MovingAverage2 = movingAverage2;
-            Result = result;
-        }
-
     }
 }

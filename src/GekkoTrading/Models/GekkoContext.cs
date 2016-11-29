@@ -34,22 +34,15 @@ namespace GekkoTrading.Models.Entities
             return viewModel;
         }
 
-        public async Task<ResultVM> GetResult(MovingAverageVM viewModel)
+        public async Task<List<ResultVM>> GetResult(MovingAverageVM viewModel)
         {
-            var results = new List<MovingAverageVM>();
+            var results = new List<ResultVM>();
 
-            //Hämta data baserat på viewmodel
-            Data = PriceData.Where(x => x.Timestamp.CompareTo(viewModel.StartDate) >= 0
-            && x.Timestamp.CompareTo(viewModel.EndDate.AddDays(1)) < 0)
-            .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice))
-            .ToList();
-            //Eventuellt begränsa pga performance
+            SetupData(viewModel.StartDate, viewModel.EndDate, viewModel.CandleDuration);
 
-            Data = GetCandleAverage(Data, viewModel.CandeDuration);
-
-            for (int ma1 = 1; ma1 < viewModel.MovingAverage1; ma1++)
+            for (int ma1 = 1; ma1 <= viewModel.MovingAverage1; ma1++)
             {
-                for (int ma2 = ma1+1 ; ma2 < viewModel.MovingAverage2; ma2++)
+                for (int ma2 = ma1 + 1; ma2 <= viewModel.MovingAverage2; ma2++)
                 {
                     GetMADifference(ma1, ma2);
 
@@ -57,42 +50,115 @@ namespace GekkoTrading.Models.Entities
 
                     var result = InitiateTransactions();
 
-                    results.Add( new MovingAverageVM(viewModel, ma1, ma2, result));
+                    var resultData = new ResultVM(viewModel, ma1, ma2, result, Data.Where(x => x.IsIntersection).Count());
+                    results.Add(resultData);
                 }
             }
-            return new ResultVM(results);
+            return results;
         }
 
-        private decimal InitiateTransactions()
+        private void SetupData(DateTime startDate, DateTime endDate, int candleDuration)
         {
-            var intersections = Data.Where(x => x.IsIntersection).ToList();
-            decimal BankRoll = 100;
-            decimal lastOpeningPrice = 0;
 
-            if (intersections.Count() > 2)
+            //Hämta data baserat på viewmodel
+            Data = PriceData.Where(x => x.Timestamp.CompareTo(startDate) >= 0
+            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0)
+            .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice))
+            .ToList();
+            //Eventuellt begränsa pga performance
+
+            Data = GetCandleAverage(Data, candleDuration);
+        }
+
+        public async Task<GraphVM> GetGraphData(ResultVM resultVM)
+        {
+            SetupData(resultVM.StartDate, resultVM.EndDate, resultVM.CandleDuration);
+
+            GetMADifference(resultVM.MovingAverage1, resultVM.MovingAverage2);
+
+            GetIntersections(resultVM.MovingAverage2);
+
+            var results = await GetAllTransactionData();
+
+            return results;
+        }
+
+        private async Task<GraphVM> GetAllTransactionData()
+        {
+            var returnData = new GraphVM();
+            var intersections = Data.Where(x => x.IsIntersection).Count();
+            decimal CurrentPercentage = 1;
+            decimal previousTransactionPrice = 0;
+            decimal initialPrice = 0;
+
+            if (intersections > 2)
             {
                 int counter = 0;
 
-                for (int i = 0; i < Data.Count; i++)
+                for (int i = 0; i < Data.Count - 1; i++)
                 {
                     if (Data[i].IsIntersection)
                     {
-                        //Köp!
-                        if (counter % 2 == 0 && counter != 0)
+                        if (counter == 0)
                         {
-                            BankRoll /= (Data[i + 1].OpeningPrice / lastOpeningPrice);
+                            initialPrice = Data[i + 1].OpeningPrice;
+                        }
+                        //Köp!
+                        if (counter % 2 == 0)
+                        {
+                            previousTransactionPrice = Data[i + 1].OpeningPrice;
+                            // Handla med negativt innehav?
+                            //CurrentPercentage /= (Data[i + 1].OpeningPrice / lastOpeningPrice);
                         }
                         //Sälj!
                         else if (counter % 2 != 0)
                         {
-                            BankRoll *= (Data[i + 1].OpeningPrice / lastOpeningPrice);
+                            CurrentPercentage *= (Data[i + 1].OpeningPrice / previousTransactionPrice);
                         }
-                        lastOpeningPrice = Data[i + 1].OpeningPrice;
+                        returnData.GraphPoints.Add(new GraphData(Data[i].TimeStamp, CurrentPercentage, Data[i + 1].OpeningPrice));
                         counter++;
                     }
                 }
             }
-            return BankRoll;
+            return returnData;
+        }
+
+        private decimal InitiateTransactions()
+        {
+            var intersections = Data.Where(x => x.IsIntersection).Count();
+            decimal CurrentPercentage = 1;
+            decimal previousTransactionPrice = 0;
+            decimal initialPrice = 0;
+
+            if (intersections > 2)
+            {
+                int counter = 0;
+
+                for (int i = 0; i < Data.Count - 1; i++)
+                {
+                    if (Data[i].IsIntersection)
+                    {
+                        if (counter == 0)
+                        {
+                            initialPrice = Data[i + 1].OpeningPrice;
+                        }
+                        //Köp!
+                        if (counter % 2 == 0)
+                        {
+                            previousTransactionPrice = Data[i + 1].OpeningPrice;
+                            // Handla med negativt innehav?
+                            //CurrentPercentage /= (Data[i + 1].OpeningPrice / lastOpeningPrice);
+                        }
+                        //Sälj!
+                        else if (counter % 2 != 0)
+                        {
+                            CurrentPercentage *= (Data[i + 1].OpeningPrice / previousTransactionPrice);
+                        }
+                        counter++;
+                    }
+                }
+            }
+            return CurrentPercentage;
         }
 
         private void GetIntersections(int value)
