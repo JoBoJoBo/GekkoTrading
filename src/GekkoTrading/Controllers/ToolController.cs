@@ -47,9 +47,9 @@ namespace GekkoTrading.Controllers
 
         public async Task<IActionResult> Result(MovingAverageVM viewModel)
         {
-            var result = await context.GetResult(viewModel);
+            var result = await context.GetResultAsync(viewModel);
             var bestResult = result.OrderByDescending(x => x.Result).ToList();
-            var graphData = await context.GetGraphData(bestResult[0]);
+            var graphData = await context.GetGraphDataAsync(bestResult[0]);
             viewModel.Results = bestResult;
             viewModel.Graph = graphData;
             return View("MA", viewModel);

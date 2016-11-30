@@ -34,11 +34,11 @@ namespace GekkoTrading.Models.Entities
             return viewModel;
         }
 
-        public async Task<List<ResultVM>> GetResult(MovingAverageVM viewModel)
+        public async Task<List<ResultVM>> GetResultAsync(MovingAverageVM viewModel)
         {
             var results = new List<ResultVM>();
 
-            SetupData(viewModel.StartDate, viewModel.EndDate, viewModel.CandleDuration);
+            await SetupDataAsync(viewModel.StartDate, viewModel.EndDate, viewModel.CandleDuration);
 
             for (int ma1 = 1; ma1 <= viewModel.MovingAverage1; ma1++)
             {
@@ -57,33 +57,36 @@ namespace GekkoTrading.Models.Entities
             return results;
         }
 
-        private void SetupData(DateTime startDate, DateTime endDate, int candleDuration)
+        private async Task SetupDataAsync(DateTime startDate, DateTime endDate, int candleDuration)
         {
 
             //Hämta data baserat på viewmodel
-            Data = PriceData.Where(x => x.Timestamp.CompareTo(startDate) >= 0
+            Data = await PriceData.Where(x => x.Timestamp.CompareTo(startDate) >= 0
             && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0)
             .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice))
-            .ToList();
+            .ToListAsync();
             //Eventuellt begränsa pga performance
 
-            Data = GetCandleAverage(Data, candleDuration);
+            if (candleDuration != 1)
+            {
+                Data = GetCandleAverage(Data, candleDuration);
+            }
         }
 
-        public async Task<GraphVM> GetGraphData(ResultVM resultVM)
+        public async Task<GraphVM> GetGraphDataAsync(ResultVM resultVM)
         {
-            SetupData(resultVM.StartDate, resultVM.EndDate, resultVM.CandleDuration);
+            await SetupDataAsync(resultVM.StartDate, resultVM.EndDate, resultVM.CandleDuration);
 
             GetMADifference(resultVM.MovingAverage1, resultVM.MovingAverage2);
 
             GetIntersections(resultVM.MovingAverage2);
 
-            var results = await GetAllTransactionData();
+            var results = GetAllTransactionData();
 
             return results;
         }
 
-        private async Task<GraphVM> GetAllTransactionData()
+        private GraphVM GetAllTransactionData()
         {
             var returnData = new GraphVM();
             var intersections = Data.Where(x => x.IsIntersection).Count();
@@ -201,23 +204,23 @@ namespace GekkoTrading.Models.Entities
 
         //Metod för att räkna ut CandlestickAverage
 
-        public async void GetMADifference(int ma1, int ma2)
+        public void GetMADifference(int ma1, int ma2)
         {
             for (int i = ma2; i < Data.Count; i++)
             {
-                var results = await Task.WhenAll(GetAverage(ma1, i), GetAverage(ma2, i));
+                //var results = await Task.WhenAll(GetAverage(ma1, i), GetAverage(ma2, i));
 
                 // Callback start
-                Data[i].MA1Average = results[0];
-                Data[i].MA2Average = results[1];
-                Data[i].MADifference = results[0] - results[1];
+                Data[i].MA1Average = GetAverage(ma1, i);
+                Data[i].MA2Average = GetAverage(ma2, i);
+                Data[i].MADifference = Data[i].MA1Average - Data[i].MA2Average;
                 // Callback end
             }
 
             Data.RemoveRange(0, ma2);
         }
 
-        private async Task<decimal> GetAverage(int ma, int i)
+        private decimal GetAverage(int ma, int i)
         {
             decimal movingAveragePrice = 0;
 

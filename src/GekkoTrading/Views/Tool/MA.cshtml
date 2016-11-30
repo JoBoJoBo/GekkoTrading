@@ -67,7 +67,13 @@
                   document.getElementById("graphdiv"),
 
                   // CSV or path to a CSV file.
-                  "@Model.Graph.PrintToCsv()"
+                  "@Model.Graph.PrintToCsv()",
+
+                    {
+                        digitsAfterDecimal: 4,
+                        showRangeSelector: true
+
+                    }
 
                 );
             </script>

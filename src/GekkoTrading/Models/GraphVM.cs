@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GekkoTrading.Models
@@ -14,12 +15,12 @@ namespace GekkoTrading.Models
         }
         public string PrintToCsv()
         {
-            string csv = "Date,CP\\n";
+            StringBuilder csv = new StringBuilder($"Date,CP{Environment.NewLine}");
             foreach (var item in GraphPoints)
             {
-                csv += $"{item.TimeStamp},{(item.CurrentProfit*100).ToDot()}\\n";
+                csv.Append($"{item.TimeStamp},{(item.CurrentProfit - 1).ToDot()}{Environment.NewLine}");
             }
-            return csv;
+            return csv.ToString();
         }
     }
 }
