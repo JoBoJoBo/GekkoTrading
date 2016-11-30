@@ -36,16 +36,12 @@ namespace GekkoTrading.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
         [Authorize]
         public IActionResult TheTool()
         {
-            ViewData["Message"] = "The tool.";
-
             return View();
         }
 
