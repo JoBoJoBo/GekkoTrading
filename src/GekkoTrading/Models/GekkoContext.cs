@@ -44,6 +44,7 @@ namespace GekkoTrading.Models.Entities
             {
                 for (int ma2 = ma1 + 1; ma2 <= viewModel.MovingAverage2; ma2++)
                 {
+
                     GetMADifference(ma1, ma2);
 
                     GetIntersections(ma2);
