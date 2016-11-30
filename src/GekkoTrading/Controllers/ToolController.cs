@@ -54,5 +54,19 @@ namespace GekkoTrading.Controllers
             viewModel.Graph = graphData;
             return View("MA", viewModel);
         }
+
+        public async Task<string> GenerateGraphAsync(ResultVM viewModel)
+        {
+            var graphData = await context.GetGraphDataAsync(viewModel);
+            var csv = graphData.PrintToCsv();
+            return csv;
+        }
+
+        public async Task <IActionResult> GenerateResultsAsync(MovingAverageVM viewModel)
+        {
+            var result = await context.GetResultAsync(viewModel);
+            var orderedResult = result.OrderByDescending(x => x.Result).ToArray();
+            return Json(orderedResult);
+        }
     }
 }

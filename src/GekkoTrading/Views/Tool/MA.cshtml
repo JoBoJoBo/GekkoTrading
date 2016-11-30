@@ -8,7 +8,7 @@
         }
     </div>
     <div class="col-sm-8 col-lg-10">
-        <form asp-action="MA" asp-controller="Tool">
+        <form>
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
@@ -30,7 +30,7 @@
                             <option>30</option>
                             <option>60</option>
                         </select>
-                        <span asp-validation-for="CandleDuration"></span>
+                        <span asp-validation-for="CandleDuration"></span> 
                         <br />
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         <span asp-validation-for="MovingAverage2">@ViewBag.MA2Error</span>
                     </div>
                     <br />
-                    <input class="btn btn-default pull-right" type="submit" />
+                    <input class="btn btn-default pull-right" type="button" value="Skicka" onclick="GenerateResult()" />
                 </div>
 
             </div>
@@ -54,10 +54,45 @@
         </form>
     </div>
 </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 
+<script>
+    function GenerateResult() {
+        var data = {
+            "@nameof(MovingAverageVM.StartDate)": $("#@nameof(MovingAverageVM.StartDate)").val(),
+            "@nameof(MovingAverageVM.EndDate)": $("#@nameof(MovingAverageVM.EndDate)").val(),
+            "@nameof(MovingAverageVM.CandleDuration)": $("#@nameof(MovingAverageVM.CandleDuration)").val(),
+            "@nameof(MovingAverageVM.MovingAverage1)": $("#@nameof(MovingAverageVM.MovingAverage1)").val(),
+            "@nameof(MovingAverageVM.MovingAverage2)": $("#@nameof(MovingAverageVM.MovingAverage2)").val()
+        }
+        //Visa den spinnande GIF:en.
+        $.post("/Tool/GenerateResultsAsync", data, function (json) {
+            //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
+            console.log("Result: " + json[0])
+            GenerateGraph(json[0])
+
+        })
+    }
+
+    function GenerateGraph(result) {
+        var data = {
+            "@nameof(ResultVM.StartDate)": result.StartDate,
+            "@nameof(ResultVM.MovingAverage1)": result.MovingAverage1,
+            "@nameof(ResultVM.StartDate)": result.StartDate,
+            "@nameof(ResultVM.StartDate)": result.StartDate,
+            "@nameof(ResultVM.StartDate)": result.StartDate,
+
+
+        }
+        //Visa den spinnande GIF:en.
+        $.post("/Tool/GenerateGraphAsync", result, function (csv) {
+            //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
+            console.log(csv)
+        })
+    }
+</script>
 @if (Model?.Results?.Count > 0)
 {
-    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 
     <div id="graphdiv"></div>
             <script type="text/javascript">
