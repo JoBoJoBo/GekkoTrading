@@ -63,7 +63,7 @@ namespace GekkoTrading.Models.Entities
 
             //Hämta data baserat på viewmodel
             Data = await PriceData.Where(x => x.Timestamp.CompareTo(startDate) >= 0
-            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0)
+            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0 && x.InstrumentId == 1)
             .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice))
             .ToListAsync();
             //Eventuellt begränsa pga performance
