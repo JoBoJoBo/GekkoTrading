@@ -65,6 +65,7 @@
 <script src="~/js/dygraph-combined.js"></script>
 
 <script>
+    var gekkoResultsJson;
     function GenerateResult() {
         var data = {
             "@nameof(MovingAverageVM.StartDate)": $("#@nameof(MovingAverageVM.StartDate)").val(),
@@ -77,6 +78,7 @@
         $('#spinningGekko').show();
         $.post("/Tool/GenerateResultsAsync", data, function (json) {
             //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
+            gekkoResultsJson = json
             $('#spinningGekko').hide();
             console.log("Result: " + json[0]);
             var resultsDiv = $('#ResultsDiv');
@@ -84,7 +86,7 @@
             var html = '<table class="table"> <thead><tr><th>MA1</th><th>MA2</th><th>Profit</th></tr></thead><tbody>';
             for (var i = 0; i < json.length; i++) 
             {
-                html += '<tr><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td>'+ json[i].result + '</td></tr>';
+                html += '<tr><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result + '</td></tr>';
             }
             html += '</tbody></table>';
             resultsDiv.append(html);

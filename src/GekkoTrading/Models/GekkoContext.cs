@@ -63,7 +63,7 @@ namespace GekkoTrading.Models.Entities
 
             //Hämta data baserat på viewmodel
             Data = await PriceData.Where(x => x.Timestamp.CompareTo(startDate) >= 0
-            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0 && x.InstrumentId == 1)
+            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0 && x.InstrumentId == 1).OrderBy(x => x.Timestamp)
             .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice))
             .ToListAsync();
             //Eventuellt begränsa pga performance
@@ -218,7 +218,7 @@ namespace GekkoTrading.Models.Entities
                 // Callback end
             }
 
-            Data.RemoveRange(0, ma2);
+            //Data.RemoveRange(0, ma2);
         }
 
         private decimal GetAverage(int ma, int i)
