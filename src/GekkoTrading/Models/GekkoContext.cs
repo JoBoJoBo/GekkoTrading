@@ -168,7 +168,7 @@ namespace GekkoTrading.Models.Entities
         private void GetIntersections(int value)
         {
             bool isNotFirst = false;
-
+            Data.ForEach(x => x.IsIntersection = false);
             for (int i = value; i < Data.Count; i++)
             {
                 if (Data[i - 1].MADifference > 0 && Data[i].MADifference < 0 && isNotFirst)
