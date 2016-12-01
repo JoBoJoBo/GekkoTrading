@@ -7,6 +7,10 @@ namespace GekkoTrading.Models
 {
     public class ResultVM
     {
+        public ResultVM()
+        {
+
+        }
         public int MovingAverage1 { get; set; }
 
         public int MovingAverage2 { get; set; }
