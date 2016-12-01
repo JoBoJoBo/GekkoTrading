@@ -1,5 +1,18 @@
 ﻿@model MovingAverageVM
+<style>
+    .centeredmodal {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
 
+   min-width: 100%;  
+  min-width: 100vh;
+
+  display: flex;
+  align-items: center;
+
+ 
+}
+</style>
 <div class="row">
     <div class="col-sm-4 col-lg-2">
         @{
@@ -46,7 +59,7 @@
                         <span asp-validation-for="MovingAverage2">@ViewBag.MA2Error</span>
                     </div>
                     <br />
-                    <input class="btn btn-default pull-right" type="button" value="Skicka" onclick="GenerateResult()" />
+                    <input class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#spinningGekko" value="Skicka" onclick="GenerateResult()" />
                 </div>
 
             </div>
@@ -56,9 +69,10 @@
 </div>
 <div id="GraphDiv"></div>
     <div id="ResultsDiv">
-        <div id="spinningGekko" style="display:none">
-            <img src="~/images/spinning_gordon_gekko.gif" />
-        </div>
+<div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
+    <img src="~/images/spinning_gordon_gekko.gif" class="center-block"/>
+</div>
+        
     </div>
 
  
@@ -78,6 +92,7 @@
         $.post("/Tool/GenerateResultsAsync", data, function (json) {
             //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
             $('#spinningGekko').hide();
+            $('#spinningGekko').modal('hide');
             console.log("Result: " + json[0]);
             var resultsDiv = $('#ResultsDiv');
             resultsDiv.empty();
