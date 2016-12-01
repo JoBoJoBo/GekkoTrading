@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Start Page";
 }
 
 <div class="row">
@@ -11,16 +11,30 @@
         </ul>
     </div>
 </div>
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000" style="max-width:750px">
+<br />
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
     </ol>
-    <div class="carousel-inner" role="listbox">
+    <div class="carousel-inner" role="listbox" >
         <div class="item active">
-            <img src="~/images/Mockup3.PNG" class="img-responsive" />
+            <img src="~/images/Mockup3.PNG" class="img-responsive" style="max-height:500px; margin:0 auto"/>
             <div class="carousel-caption" role="option">
                 <p>
-                    
+
+                    <a class="btn btn-default" href="/Account/Login">
+                        Logga in för att testa
+                    </a>
+
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/EML.PNG" class="img-responsive" style="max-height:500px; margin:0 auto"/>
+            <div class="carousel-caption" role="option">
+                <p>
+
                     <a class="btn btn-default" href="/Account/Login">
                         Logga in för att testa
                     </a>
@@ -41,10 +55,10 @@
 </div>
 
 @*<div class="row">
-    <div class="col-md-8    ">
-        <h2></h2>
-        <ul>
-            <li></li>
-        </ul>
-    </div>
-</div>*@
+        <div class="col-md-8    ">
+            <h2></h2>
+            <ul>
+                <li></li>
+            </ul>
+        </div>
+    </div>*@

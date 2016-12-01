@@ -24,7 +24,7 @@
 
         <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" ><img src="~/images/Gekko.png" style="max-width:200px; margin-left:50px" /></a>
         
-        <div class="container">
+        <div class="container" >
 
             @* Menyn för små skärmar *@
             <div class="navbar-header" style="padding:40px">
@@ -36,10 +36,10 @@
                 </button>
             </div>
         </div>
-
-        <div class="container" style="padding-left:200px">
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+        @* Menyinnehåll *@
+        <div class="container">
+            <div class="navbar-collapse collapse"  style="padding-left:200px; font-size:large">
+                <ul class="nav navbar-nav"  style="max-height:0px">
 
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li>
@@ -49,6 +49,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a asp-area="" asp-controller="Tool" asp-action="MA">Moving Average</a></li>
+                            <li><a asp-area="" asp-controller="Tool" asp-action="MA">More to come...</a></li>
                         </ul>
                     <li><a asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
