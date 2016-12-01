@@ -28,10 +28,14 @@ namespace GekkoTrading.Controllers
         {
             var viewModel = new MovingAverageVM();
             viewModel.Instruments = await context.GetInstrumentsAsync();
-            if (id != 0)
-            {
-                viewModel.ActiveInstrument = id;
-            }
+
+            viewModel.ActiveInstrument = id == 0 ? 1 : id;
+            viewModel.StartDate = new DateTime(2016, 05, 23);
+            viewModel.EndDate = new DateTime(2016, 11, 22);
+            viewModel.MovingAverage1 = 1;
+            viewModel.MovingAverage2 = 2;
+            viewModel.CandleDuration = 1;
+
             return View(viewModel);
 
         }
@@ -79,9 +83,25 @@ namespace GekkoTrading.Controllers
         [HttpPost]
         public async Task<IActionResult> GenerateResultsAsync(MovingAverageVM viewModel)
         {
-            var result = await context.GetResultAsync(viewModel);
-            var orderedResult = result.OrderByDescending(x => x.Result).ToArray();
-            return Json(orderedResult);
+            if (!ModelState.IsValid)
+                return View(viewModel);
+            else if (viewModel.MovingAverage1 >= viewModel.MovingAverage2)
+            {
+                ViewBag.MA2Error = "Moving average 2 must be greater than moving average 1";
+                return View(viewModel);
+            }
+            else if (viewModel.StartDate.CompareTo(viewModel.EndDate) > 0)
+            {
+                ViewBag.DateError = "Does this look like a valid date-interval to you?!";
+                return View(viewModel);
+            }
+
+            else
+            {
+                var result = await context.GetResultAsync(viewModel);
+                var orderedResult = result.OrderByDescending(x => x.Result).ToArray();
+                return Json(orderedResult);
+            }
         }
     }
 }

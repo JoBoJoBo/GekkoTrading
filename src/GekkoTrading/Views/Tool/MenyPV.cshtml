@@ -1,27 +1,21 @@
 ﻿@using GekkoTrading.Models.Entities
-@model List <Instrument>
+@model MovingAverageVM
 
-@*<div class="dropdown">
-    <button class="btn btn-default dropdown-toggle FullWidthBtn" type="button" data-toggle="dropdown">
-        Indicators
-        <span class="caret"></span>
-    </button>
-
-    <ul class="dropdown-menu">
-        <li><a href="#">MA</a></li>
-        <li><a href="#">SIS</a></li>
-        <li><a href="#">BRI</a></li>
-    </ul>
-</div>
-<br />*@
 
 <div class="list-group hidden-xs">
     <span href="#" class="list-group-item" style="font-weight:700">
         Instruments
     </span>
-    @foreach (var item in Model)
+    @foreach (var item in Model.Instruments)
     {
-        <a href="/Tool/MA/@item.Id" class="list-group-item">@item.InstrumentName</a>
+        if (item.Id == Model.ActiveInstrument)
+        {
+            <a href="/Tool/MA/@item.Id" class="list-group-item active">@item.InstrumentName</a>
+        }
+        else
+        {
+            <a href="/Tool/MA/@item.Id" class="list-group-item">@item.InstrumentName</a>
+        }
     }
 </div>
 
@@ -31,10 +25,17 @@
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        @foreach (var item in Model)
-     {
-            <li><a href="#">@item</a></li>
-     }
+        @foreach (var item in Model.Instruments)
+        {
+            if (item.Id == Model.ActiveInstrument)
+            {
+                <li><a href="/Tool/MA/@item.Id" class="list-group-item active">@item</a></li>
+            }
+            else
+            {
+                <li><a href="/Tool/MA/@item.Id" class="list-group-item">@item</a></li>
+            }
+        }
     </ul>
 </div>
 
