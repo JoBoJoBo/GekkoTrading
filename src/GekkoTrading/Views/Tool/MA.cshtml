@@ -10,16 +10,12 @@
         align-items: center;
     }
 </style>
-@{
-    var activeInstrument = Model?.Instruments.Where(nr => nr.Id == Model.ActiveInstrument).SingleOrDefault();
-}
-@activeInstrument?.InstrumentName
 
 <div class="row">
     <div class="col-sm-4 col-md-3 col-lg-2">
         @{
             string[] meny = { "Gold", "Silver", "Platinum", "Bananerr" };
-            Html.RenderPartial("MenyPV", Model.Instruments);
+            Html.RenderPartial("MenyPV", Model);
         }
     </div>
     <div class="col-sm-4 col-md-5 col-lg-6">
@@ -65,7 +61,7 @@
                     </div>
                     <br />
                     <br />
-                    <input class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#spinningGekko" value="Go" onclick="GenerateResult()" />
+                    <input class="btn btn-default pull-right" type="button" value="Go" onclick="GenerateResult()" />
                 </div>
             </div>
             <br />
@@ -96,30 +92,18 @@
                 </div>
             </div>
 
-        </form>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-md-6">
-        <div id="ResultsDiv" style="overflow:auto; max-height:320px">
             <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
                 <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
             </div>
+        <div id="ResultsDiv" style="overflow:auto; max-height:320px">
         </div>
     </div>
     <div class="col-md-6">
         <div id="GraphDiv" class=""></div>
     </div>
 </div>
-
-@*<div id="GraphDiv" class=""></div>
-<div id="ResultsDiv">
-    <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
-        <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
-    </div>
-
-</div>*@
 
 
 <script src="~/js/dygraph-combined.js"></script>
@@ -135,22 +119,30 @@
             "@nameof(MovingAverageVM.MovingAverage2)": $("#@nameof(MovingAverageVM.MovingAverage2)").val()
         }
         //Visa den spinnande GIF:en.
-        $('#spinningGekko').show();
+        $('#spinningGekko').modal('show');
         $.post("/Tool/GenerateResultsAsync", data, function (json) {
             //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
-            $('#spinningGekko').hide();
             $('#spinningGekko').modal('hide');
             gekkoResultsJson = json
             console.log("Result: " + json[0]);
             var resultsDiv = $('#ResultsDiv');
             resultsDiv.empty();
-            var html = '<table class="table"> <thead><tr><th>MA1</th><th>MA2</th><th>Profit</th></tr></thead><tbody>';
+            var html = '<table class="table table-hover"><thead><tr><th>MA1</th><th>MA2</th><th>Profit</th></tr></thead><tbody>';
             for (var i = 0; i < json.length; i++) {
+                if (i == 0) {
+                    html += '<tr class="active"><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result + '</td></tr>';
+                }
                 html += '<tr><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result + '</td></tr>';
             }
             html += '</tbody></table>';
             resultsDiv.append(html);
             GenerateGraph(json[0]);
+
+            $('tr').click(function () {
+
+                $('tr').removeClass('active')
+                $(this).addClass('active')
+            });
 
         })
     }
@@ -167,10 +159,9 @@
 
         }
         //Visa den spinnande GIF:en.
-        $('#spinningGekko').show();
+        $('#spinningGekko').modal('show');
         $.post("/Tool/GenerateGraphAsync", data, function (csv) {
             //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
-            $('#spinningGekko').hide();
             $('#spinningGekko').modal('hide');
             g = new Dygraph(
 
