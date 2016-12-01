@@ -9,6 +9,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
+        
+        #Spaces {
+
+            margin-right: 20px;
+            margin-bottom: 20px;
+            background-color: #e6e6e6;
+            /*border: 2px solid black;*/
+            border-radius: 25px;
+           
+        }
+
         /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
         .row.content {
             height: 450px;
@@ -44,67 +55,85 @@
 
     <div class="container-fluid text-center">
         <div class="row content">
+         
 
-            <div class="col-sm-8 text-left">
+            <div class="col-sm-12 col-lg-12 text-left">
                 <h1>Welcome @Model.Username</h1>
                 <p>Below you will find your saved searches, click them to review your result.</p>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-6 col-md-4" style="border: 2px solid black;">
+            <div class="col-sm-2 sidenav" style="float:right">
+            <p><a href="http://www.bloomberg.com" target="_blank">Bloomberg News</a></p>
+            <p><a href="http://www.di.se" target="_blank">DI.se</a></p>
+            <p><a href="https://www.dailyfx.com/calendar" target="_blank">Financial Calendar</a></p>
+        </div>
+                   
+                    <div class="col-sm-3 col-md-3 col-lg-3" id="Spaces">
                         <h3>Gold</h3>
                         <p>2016-06-03 to 2016-08-03</p>
                         <p>Indicator: Moving Average</p>
-                        <p>MA1: 5  MA2: 10</p>
+                        <p>MA1:5  MA2:10</p>
                         <p>Return: 2,1%</p>
                     </div>
-                    <div class="col-sm-6 col-md-4" style="border: 2px solid black;">
+                    <div class="col-sm-3 col-md-3 col-lg-3" id="Spaces">
                         <h3>Silver</h3>
                         <p>2016-10-12 to 2016-10-24</p>
                         <p>Indicator: Moving Average</p>
-                        <p>MA1: 12  MA2: 25</p>
+                        <p>MA1:12  MA2:25</p>
                         <p>Return: 1,25%</p>
                     </div>
-                    <div class="col-sm-6 col-md-4" style="border: 2px solid black;">
+                    <div class="col-sm-3 col-md-3 col-lg-3" id="Spaces">
                         <h3>Nikkei225</h3>
                         <p>2016-07-28 to 2016-11-15</p>
                         <p>Indicator: Moving Average</p>
-                        <p>MA1: 3  MA2: 14</p>
+                        <p>MA1:3  MA2:14</p>
                         <p>Return: 3,25%</p>
                     </div>
-                    <br />
-                    <div class="col-sm-6 col-md-4" style="border: 2px solid black;">
+                    
+                    <div class="col-sm-3 col-md-3 col-lg-3" id="Spaces">
                         <h3>BrentCrudeOil</h3>
+                        <p>2016-03-28 to 2016-11-10</p>
                         <p>Indicator: Moving Average</p>
-                        <p>MA1: 7  MA2: 34</p>
+                        <p>MA1:7  MA2:34</p>
                         <p>Return: 3,25%</p>
                     </div>
-                    <div class="col-sm-6 col-md-4" style="border: 2px solid black;">
+                    <div class="col-sm-3 col-md-3 col-lg-3" id="Spaces">
                         <h3>Palladium</h3>
-                        <p>Test...</p>
+                        <p>2016-08-27 to 2016-11-15</p>
+                        <p>Indicator: Moving Average</p>
+                        <p>MA1:3  MA2:45</p>
+                        <p>Return: 2,25%</p>
                     </div>
-                    <div class="col-sm-6 col-md-4" style="border: 2px solid black;">
+                    <div class="col-sm-3 col-md-3 col-lg-3" id="Spaces">
                         <h3>Lean Hog</h3>
-                        <p>Test...</p>
+                        <p>2016-05-01 to 2016-11-01</p>
+                        <p>Indicator: Moving Average</p>
+                        <p>MA1:5  MA2:23</p>
+                        <p>Return: 1,06%</p>
                     </div>
                 </div>
 
             </div>
 
-            <div class="col-sm-2 sidenav">
+
+            @*Om vi skulle vilja lägga in ads*@
+
+            @*<div class="col-sm-2 sidenav">
                 <div class="well">
-                    <p>ADS</p>
+                    
                 </div>
                 <div class="well">
-                    <p>ADS</p>
+                   
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 
 
 
 
-
+   
+ 
 
 
 
