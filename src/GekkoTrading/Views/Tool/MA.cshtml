@@ -2,17 +2,13 @@
 @model MovingAverageVM
 <style>
     .centeredmodal {
-  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-  min-height: 100vh; /* These two lines are counted as one :-)       */
-
-   min-width: 100%;  
-  min-width: 100vh;
-
-  display: flex;
-  align-items: center;
-
- 
-}
+        min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+        min-height: 100vh; /* These two lines are counted as one :-)       */
+        min-width: 100%;
+        min-width: 100vh;
+        display: flex;
+        align-items: center;
+    }
 </style>
 @{
     var activeInstrument = Model?.Instruments.Where(nr => nr.Id == Model.ActiveInstrument).SingleOrDefault();
@@ -31,7 +27,7 @@
         <form>
             <input asp-for="ActiveInstrument" type="hidden" />
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-5 col-md-4">
                     <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
                         <label asp-for="StartDate"></label><br />
                         <input type="date" asp-for="StartDate" class="form-control" max="2016-11-22" min="2016-05-23" />
@@ -55,7 +51,7 @@
                         <br />
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label asp-for="MovingAverage1"></label><br />
                         <input placeholder="1-250" asp-for="MovingAverage1" class="form-control" />
@@ -71,23 +67,53 @@
                 </div>
 
 
+                <div class="col-sm-3 col-md-4" style="overflow:auto; max-height:300px">
+                    <h4>Indicator description</h4>
+                    <p>
+                        Moving averages is a tool which will help you compare...
+                    </p>
+                    <h4>Quick help:</h4>
+                    <p>
+                        &bull; Select a start date.
+                        <br />
+                        &bull; Select an end date.
+                        <br />
+                        &bull; Select the duration of each candlestick. For example - a "Minute per candle" of five means every candle is five minutes long. Each candlestick will hold the average of each five minute periods.
+                        <br />
+                        &bull; Select the first moving average (MA1) to be compared to the second moving average.
+                        <br />
+                        &bull; Select the second moving average (MA2).
+                        <br />
+                        When you click Go, every combination from one to the set moving average one will be compared to the set moving average one to the set moving average two.
+                        So if you set MA1 to 2 and MA2 to 4 you will get the results from MA1-1 vs MA2-2, MA1-1 vs MA2-3, MA1-1 vs MA2-4 etc up to MA1-2 vs MA2-4.
+                    </p>
+                </div>
             </div>
 
         </form>
     </div>
-    <div class="col-xs-6 col-xs-offset-6 center">
-        <p>Something right</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div id="ResultsDiv" style="overflow:auto; max-height:320px">
+            <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
+                <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="GraphDiv" class=""></div>
     </div>
 </div>
 
-
-<div id="GraphDiv"></div>
-    <div id="ResultsDiv">
-<div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
-    <img src="~/images/spinning_gordon_gekko.gif" class="center-block"/>
-</div>
-        
+@*<div id="GraphDiv" class=""></div>
+<div id="ResultsDiv">
+    <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
+        <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
     </div>
+
+</div>*@
 
 
 <script src="~/js/dygraph-combined.js"></script>
@@ -113,8 +139,7 @@
             var resultsDiv = $('#ResultsDiv');
             resultsDiv.empty();
             var html = '<table class="table"> <thead><tr><th>MA1</th><th>MA2</th><th>Profit</th></tr></thead><tbody>';
-            for (var i = 0; i < json.length; i++) 
-            {
+            for (var i = 0; i < json.length; i++) {
                 html += '<tr><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result + '</td></tr>';
             }
             html += '</tbody></table>';
@@ -154,7 +179,8 @@
 
                   {
                       digitsAfterDecimal: 4,
-                      showRangeSelector: true
+                      showRangeSelector: true,
+                      title: "Relative return on investment over time"
 
                   }
 
