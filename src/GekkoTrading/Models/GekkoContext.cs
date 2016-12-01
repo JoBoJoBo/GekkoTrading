@@ -45,7 +45,8 @@ namespace GekkoTrading.Models.Entities
         {
             var results = new List<ResultVM>();
 
-            await SetupDataAsync(viewModel.StartDate, viewModel.EndDate, viewModel.CandleDuration);
+            await SetupDataAsync(viewModel.StartDate, viewModel.EndDate, viewModel.CandleDuration, viewModel.ActiveInstrument);
+            var instrumentID = Data[0].InstrumentID;
 
             for (int ma1 = 1; ma1 <= viewModel.MovingAverage1; ma1++)
             {
@@ -58,20 +59,20 @@ namespace GekkoTrading.Models.Entities
 
                     var result = InitiateTransactions();
 
-                    var resultData = new ResultVM(viewModel, ma1, ma2, result, Data.Where(x => x.IsIntersection).Count());
+                    var resultData = new ResultVM(viewModel, ma1, ma2, result, Data.Where(x => x.IsIntersection).Count(), instrumentID);
                     results.Add(resultData);
                 }
             }
             return results;
         }
 
-        private async Task SetupDataAsync(DateTime startDate, DateTime endDate, int candleDuration)
+        private async Task SetupDataAsync(DateTime startDate, DateTime endDate, int candleDuration, int instrumentID)
         {
 
             //Hämta data baserat på viewmodel
             Data = await PriceData.Where(x => x.Timestamp.CompareTo(startDate) >= 0
-            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0 && x.InstrumentId == 1).OrderBy(x => x.Timestamp)
-            .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice))
+            && x.Timestamp.CompareTo(endDate.AddDays(1)) < 0 && x.InstrumentId == instrumentID).OrderBy(x => x.Timestamp)
+            .Select(y => new GekkoMAData(y.Timestamp, y.PriceAverage, y.OpenPrice, y.InstrumentId))
             .ToListAsync();
             //Eventuellt begränsa pga performance
 
@@ -83,20 +84,21 @@ namespace GekkoTrading.Models.Entities
 
         public async Task<GraphVM> GetGraphDataAsync(ResultVM resultVM)
         {
-            await SetupDataAsync(resultVM.StartDate, resultVM.EndDate, resultVM.CandleDuration);
+            await SetupDataAsync(resultVM.StartDate, resultVM.EndDate, resultVM.CandleDuration, resultVM.ActiveInstrument);
+            var instrumentID = Data[0].InstrumentID;
 
             GetMADifference(resultVM.MovingAverage1, resultVM.MovingAverage2);
 
             GetIntersections(resultVM.MovingAverage2);
 
-            var results = GetAllTransactionData();
+            var results = GetAllTransactionData(instrumentID);
 
             return results;
         }
 
-        private GraphVM GetAllTransactionData()
+        private GraphVM GetAllTransactionData(int instrumentID)
         {
-            var returnData = new GraphVM();
+            var returnData = new GraphVM(instrumentID);
             var intersections = Data.Where(x => x.IsIntersection).Count();
             decimal CurrentPercentage = 1;
             decimal previousTransactionPrice = 0;

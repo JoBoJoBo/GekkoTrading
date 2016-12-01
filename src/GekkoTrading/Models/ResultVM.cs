@@ -22,8 +22,9 @@ namespace GekkoTrading.Models
         public int CandleDuration { get; set; }
         public decimal Result { get; set; }
         public int NrOfIntersections { get; set; }
+        public int ActiveInstrument { get; set; }
 
-        public ResultVM(MovingAverageVM viewModel, int movingAverage1, int movingAverage2, decimal result, int nrOfIntersections)
+        public ResultVM(MovingAverageVM viewModel, int movingAverage1, int movingAverage2, decimal result, int nrOfIntersections, int activeInstrument)
         {
             StartDate = viewModel.StartDate;
             EndDate = viewModel.EndDate;
@@ -32,6 +33,7 @@ namespace GekkoTrading.Models
             MovingAverage2 = movingAverage2;
             Result = result;
             NrOfIntersections = nrOfIntersections;
+            ActiveInstrument = activeInstrument;
         }
     }
 }

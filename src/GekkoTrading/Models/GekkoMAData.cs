@@ -7,11 +7,12 @@ namespace GekkoTrading.Models
 {
     public class GekkoMAData
     {
-        public GekkoMAData(DateTime TimeStamp, decimal CandleAveragePrice, decimal OpeningPrice)
+        public GekkoMAData(DateTime TimeStamp, decimal CandleAveragePrice, decimal OpeningPrice, int instrumentID)
         {
             this.TimeStamp = TimeStamp;
             this.CandleAveragePrice = CandleAveragePrice;
             this.OpeningPrice = OpeningPrice;
+            this.InstrumentID = instrumentID;
         }
 
         public DateTime TimeStamp { get; set; }
@@ -22,5 +23,6 @@ namespace GekkoTrading.Models
         public decimal MADifference { get; set; }
         public bool IsIntersection { get; set; }
 
+        public int InstrumentID { get; set; }
     }
 }

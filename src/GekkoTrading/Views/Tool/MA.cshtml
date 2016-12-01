@@ -116,7 +116,8 @@
             "@nameof(MovingAverageVM.EndDate)": $("#@nameof(MovingAverageVM.EndDate)").val(),
             "@nameof(MovingAverageVM.CandleDuration)": $("#@nameof(MovingAverageVM.CandleDuration)").val(),
             "@nameof(MovingAverageVM.MovingAverage1)": $("#@nameof(MovingAverageVM.MovingAverage1)").val(),
-            "@nameof(MovingAverageVM.MovingAverage2)": $("#@nameof(MovingAverageVM.MovingAverage2)").val()
+            "@nameof(MovingAverageVM.MovingAverage2)": $("#@nameof(MovingAverageVM.MovingAverage2)").val(),
+            "@nameof(MovingAverageVM.ActiveInstrument)": $("#@nameof(MovingAverageVM.ActiveInstrument)").val()
         }
         //Visa den spinnande GIF:en.
         $('#spinningGekko').modal('show');
@@ -155,8 +156,8 @@
             "@nameof(ResultVM.EndDate)": result.endDate,
             "@nameof(ResultVM.CandleDuration)": result.candleDuration,
             "@nameof(ResultVM.Result)": result.result,
-            "@nameof(ResultVM.NrOfIntersections)": result.nrOfIntersections
-
+            "@nameof(ResultVM.NrOfIntersections)": result.nrOfIntersections,
+            "@nameof(ResultVM.ActiveInstrument)": result.activeInstrument
         }
         //Visa den spinnande GIF:en.
         $('#spinningGekko').modal('show');

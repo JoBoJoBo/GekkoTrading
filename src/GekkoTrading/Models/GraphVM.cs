@@ -9,9 +9,11 @@ namespace GekkoTrading.Models
     public class GraphVM
     {
         public List<GraphData> GraphPoints { get; set; }
-        public GraphVM()
+        public int Instrument { get; set; }
+        public GraphVM(int instrumentID)
         {
             GraphPoints = new List<GraphData>();
+            Instrument = instrumentID;
         }
         public string PrintToCsv()
         {
