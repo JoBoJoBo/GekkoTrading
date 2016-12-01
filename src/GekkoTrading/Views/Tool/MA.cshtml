@@ -99,9 +99,9 @@
         $('#spinningGekko').show();
         $.post("/Tool/GenerateResultsAsync", data, function (json) {
             //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
-            gekkoResultsJson = json
             $('#spinningGekko').hide();
             $('#spinningGekko').modal('hide');
+            gekkoResultsJson = json
             console.log("Result: " + json[0]);
             var resultsDiv = $('#ResultsDiv');
             resultsDiv.empty();
@@ -129,7 +129,11 @@
 
         }
         //Visa den spinnande GIF:en.
+        $('#spinningGekko').show();
         $.post("/Tool/GenerateGraphAsync", data, function (csv) {
+            //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
+            $('#spinningGekko').hide();
+            $('#spinningGekko').modal('hide');
             g = new Dygraph(
 
                 // containing div
@@ -148,7 +152,6 @@
                   }
 
               );
-            //Nu ska vi ersätta den spinnande GIF:en med HTML-innehåll.
             console.log(csv)
         })
     }
