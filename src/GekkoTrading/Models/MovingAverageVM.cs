@@ -43,5 +43,6 @@ namespace GekkoTrading.Models
         {
             Results = new List<ResultVM>();
         }
+        public int ActiveInstrument { get; set; }
     }
 }

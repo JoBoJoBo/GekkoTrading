@@ -21,10 +21,19 @@ namespace GekkoTrading.Controllers
         }
 
         // GET: /<controller>/
+
+
         [HttpGet]
-        public IActionResult MA()
+        public async Task<IActionResult> MA(int id)
         {
-            return View();
+            var viewModel = new MovingAverageVM();
+            viewModel.Instruments = await context.GetInstrumentsAsync();
+            if (id != 0)
+            {
+                viewModel.ActiveInstrument = id;
+            }
+            return View(viewModel);
+
         }
 
         [HttpPost]
@@ -32,12 +41,12 @@ namespace GekkoTrading.Controllers
         {
             if (!ModelState.IsValid)
                 return View(viewModel);
-            else if(viewModel.MovingAverage1 >= viewModel.MovingAverage2)
+            else if (viewModel.MovingAverage1 >= viewModel.MovingAverage2)
             {
                 ViewBag.MA2Error = "Moving average 2 must be greater than moving average 1";
                 return View(viewModel);
             }
-            else if(viewModel.StartDate.CompareTo(viewModel.EndDate) > 0)
+            else if (viewModel.StartDate.CompareTo(viewModel.EndDate) > 0)
             {
                 ViewBag.DateError = "Does this look like a valid date-interval to you?!";
                 return View(viewModel);
@@ -57,7 +66,7 @@ namespace GekkoTrading.Controllers
             return View("MA", viewModel);
         }
 
-       [HttpPost]
+        [HttpPost]
         public async Task<string> GenerateGraphAsync(ResultVM viewModel)
         {
             var graphData = await context.GetGraphDataAsync(viewModel);
@@ -68,7 +77,7 @@ namespace GekkoTrading.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> GenerateResultsAsync(MovingAverageVM viewModel)
+        public async Task<IActionResult> GenerateResultsAsync(MovingAverageVM viewModel)
         {
             var result = await context.GetResultAsync(viewModel);
             var orderedResult = result.OrderByDescending(x => x.Result).ToArray();

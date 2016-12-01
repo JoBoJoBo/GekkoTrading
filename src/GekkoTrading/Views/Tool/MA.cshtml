@@ -1,4 +1,5 @@
-﻿@model MovingAverageVM
+﻿@using GekkoTrading.Models.Entities
+@model MovingAverageVM
 <style>
     .centeredmodal {
         min-height: 100%; /* Fallback for browsers do NOT support vh unit */
@@ -9,18 +10,25 @@
         align-items: center;
     }
 </style>
-<div class="row">
+@{
+    var activeInstrument = Model?.Instruments.Where(nr => nr.Id == Model.ActiveInstrument).SingleOrDefault();
+}
+@activeInstrument?.InstrumentName
 
+<div class="row">
     <div class="col-sm-4 col-md-3 col-lg-2">
         @{
-            string[] meny = { "Gold", "Silver", "Platinum", "Bananer" };
-            Html.RenderPartial("MenyPV", meny);
+            string[] meny = { "Gold", "Silver", "Platinum", "Bananerr" };
+            Html.RenderPartial("MenyPV", Model.Instruments);
         }
     </div>
-    <div class="col-xs-7 col-sm-8 col-lg-8" style="min-width:320px">
+    <div class="col-sm-4 col-md-5 col-lg-6">
+        <br />
+
         <form>
+            <input asp-for="ActiveInstrument" type="hidden" />
             <div class="row">
-                <div class="col-sm-5 col-md-4">
+                <div class="col-md-6">
                     <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
                         <label asp-for="StartDate"></label><br />
                         <input type="date" asp-for="StartDate" class="form-control" max="2016-11-22" min="2016-05-23" />
@@ -44,7 +52,7 @@
                         <br />
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="MovingAverage1"></label><br />
                         <input placeholder="1-250" asp-for="MovingAverage1" class="form-control" />
@@ -52,13 +60,18 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="MovingAverage2"></label><br />
-                        <input placeholder="1-250" asp-for="MovingAverage2" class="form-control" />
+                        <input placeholder="MA1-250" asp-for="MovingAverage2" class="form-control" />
                         <span asp-validation-for="MovingAverage2">@ViewBag.MA2Error</span>
                     </div>
                     <br />
-                    <input class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#spinningGekko" value="Skicka" onclick="GenerateResult()" />
+                    <br />
+                    <input class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#spinningGekko" value="Go" onclick="GenerateResult()" />
                 </div>
-
+            </div>
+            <br />
+        </form>
+    </div>
+    <a class="dropdown visible-xs" data-toggle="collapse" href="#help">Show help</a>
 
                 <div class="col-sm-3 col-md-4" style="overflow:auto; max-height:300px">
                     <h4>Indicator description</h4>
@@ -73,7 +86,7 @@
                         <br />
                         &bull; Select the duration of each candlestick. For example - a "Minute per candle" of five means every candle is five minutes long. Each candlestick will hold the average of each five minute periods.
                         <br />
-                        &bull; Select the first moving average (MA1) to be compared to the second moving average. 
+                        &bull; Select the first moving average (MA1) to be compared to the second moving average.
                         <br />
                         &bull; Select the second moving average (MA2).
                         <br />
@@ -87,14 +100,26 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div id="ResultsDiv" style="overflow:auto; max-height:320px">
+            <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
+                <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="GraphDiv" class=""></div>
+    </div>
+</div>
 
-<div id="GraphDiv"></div>
+@*<div id="GraphDiv" class=""></div>
 <div id="ResultsDiv">
     <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
         <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
     </div>
 
-</div>
+</div>*@
 
 
 <script src="~/js/dygraph-combined.js"></script>
@@ -160,7 +185,8 @@
 
                   {
                       digitsAfterDecimal: 4,
-                      showRangeSelector: true
+                      showRangeSelector: true,
+                      title: "Relative return on investment over time"
 
                   }
 
