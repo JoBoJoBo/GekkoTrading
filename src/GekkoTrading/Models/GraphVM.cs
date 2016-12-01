@@ -18,7 +18,7 @@ namespace GekkoTrading.Models
             StringBuilder csv = new StringBuilder($"Date,CP\n");
             foreach (var item in GraphPoints)
             {
-                csv.Append($"{item.TimeStamp},{(item.CurrentProfit).ToDot()}\n");
+                csv.Append($"{item.TimeStamp},{(item.CurrentProfit - 1).ToDot()}\n");
             }
             return csv.ToString();
         }
