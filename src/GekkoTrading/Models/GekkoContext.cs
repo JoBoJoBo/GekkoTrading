@@ -19,6 +19,13 @@ namespace GekkoTrading.Models.Entities
             Data = new List<GekkoMAData>();
         }
 
+        public async Task<List<Instrument>> GetInstrumentsAsync()
+        {
+            var returnData = await Instrument.ToListAsync();
+
+            return returnData;
+        }
+
         public async Task<HomeVM> GetUserHomeVM(string username)
         {
             var viewModel = new HomeVM();

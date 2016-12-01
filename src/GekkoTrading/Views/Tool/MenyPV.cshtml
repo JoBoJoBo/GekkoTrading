@@ -1,4 +1,5 @@
-﻿@model string[]
+﻿@using GekkoTrading.Models.Entities
+@model List <Instrument>
 
 @*<div class="dropdown">
     <button class="btn btn-default dropdown-toggle FullWidthBtn" type="button" data-toggle="dropdown">
@@ -20,7 +21,7 @@
     </span>
     @foreach (var item in Model)
     {
-        <a href="#" class="list-group-item">@item</a>
+        <a href="/Tool/MA/@item.Id" class="list-group-item">@item.InstrumentName</a>
     }
 </div>
 
