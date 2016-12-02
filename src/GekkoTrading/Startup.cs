@@ -60,7 +60,7 @@ namespace GekkoTrading
 
             services.AddMvc(options => {
 
-                options.SslPort = 44377;
+                //options.SslPort = 44377;
                 options.Filters.Add(new RequireHttpsAttribute());
 
             });

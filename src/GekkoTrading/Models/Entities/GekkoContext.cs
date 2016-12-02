@@ -6,11 +6,6 @@ namespace GekkoTrading.Models.Entities
 {
     public partial class GekkoContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseSqlServer(@"Data Source=192.168.25.81;Initial Catalog=Gekko;Persist Security Info=True;User ID=sa;Password=kingpattzor");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
