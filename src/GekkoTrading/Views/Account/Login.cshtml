@@ -74,8 +74,11 @@
                     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                         <div>
                             <p>
+                                <img src="~/images/google-logo.png" style="max-width:40px; padding-right:10px" />
+
                                 @foreach (var provider in loginProviders)
                                 {
+
                                     <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
                                 }
                             </p>
