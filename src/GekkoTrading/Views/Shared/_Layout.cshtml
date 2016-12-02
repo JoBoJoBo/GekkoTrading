@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - GekkoTrading</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
         <link rel="stylesheet" href="~/css/site.css" />
         <link href="~/css/mystyles.css" rel="stylesheet" />
     </environment>
@@ -23,9 +23,9 @@
 
     <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#e6e6e6">
 
-        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" ><img src="~/images/Gekko.png" style="max-width:200px; margin-left:50px" /></a>
-        
-        <div class="container" >
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/Gekko.png" style="max-width:200px; margin-left:50px" /></a>
+
+        <div class="container" style="min-width:400px">
 
             @* Menyn för små skärmar *@
             <div class="navbar-header" style="padding:40px">
@@ -39,7 +39,7 @@
         </div>
         @* Menyinnehåll *@
         <div class="container">
-            <div class="navbar-collapse collapse"  style="padding-left:200px; font-size:large">
+            <div class="navbar-collapse collapse" style="padding-left:200px; font-size:large">
                 <ul class="nav navbar-nav">
 
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
@@ -53,7 +53,7 @@
                             <li><a asp-area="" asp-controller="Tool" asp-action="MA">More to come...</a></li>
                         </ul>
                     <li><a asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
@@ -63,7 +63,12 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2016 - GekkoTrading</p>
+            <div class="col-sm-10">
+                <p>&copy; 2016 - GekkoTrading</p>
+            </div>
+            <div class="col-sm-2">
+                <a class="right" asp-area="" asp-controller="Home" asp-action="About">About</a>
+            </div>
         </footer>
     </div>
 

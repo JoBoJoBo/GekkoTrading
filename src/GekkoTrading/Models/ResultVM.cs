@@ -31,8 +31,8 @@ namespace GekkoTrading.Models
             CandleDuration = viewModel.CandleDuration;
             MovingAverage1 = movingAverage1;
             MovingAverage2 = movingAverage2;
-            Result = result;
-            NrOfIntersections = nrOfIntersections;
+            Result = (result - 1) * 100;
+            NrOfIntersections = nrOfIntersections / 2;
             ActiveInstrument = activeInstrument;
         }
     }

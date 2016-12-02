@@ -67,7 +67,7 @@
             <br />
         </form>
     </div>
-    <a  data-toggle="collapse" href="#help">Show help</a>
+    <a data-toggle="collapse" href="#help">Show help</a>
 
     <div id="help" class="collapse" style="overflow:auto; max-height:300px; margin-bottom: 25px;">
         <h4>Indicator description</h4>
@@ -94,9 +94,9 @@
 <br />
 <div class="row">
     <div class="col-md-6">
-            <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
-                <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
-            </div>
+        <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
+            <img src="~/images/spinning_gordon_gekko.gif" class="center-block" />
+        </div>
         <div id="ResultsDiv" style="overflow:auto; max-height:320px">
         </div>
     </div>
@@ -128,12 +128,14 @@
             console.log("Result: " + json[0]);
             var resultsDiv = $('#ResultsDiv');
             resultsDiv.empty();
-            var html = '<table class="table table-hover"><thead><tr><th>MA1</th><th>MA2</th><th>Profit</th></tr></thead><tbody>';
+            var html = '<table class="table table-hover"><thead><tr><th>MA1</th><th>MA2</th><th>Number of trades</th><th>Profit</th></tr></thead><tbody>';
             for (var i = 0; i < json.length; i++) {
                 if (i == 0) {
-                    html += '<tr class="active"><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result + '</td></tr>';
+                    html += '<tr class="active"><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td>' + json[i].nrOfIntersections + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result.toPrecision(5) + ' %</td></tr>';
                 }
-                html += '<tr><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result + '</td></tr>';
+                else {
+                    html += '<tr><td>' + json[i].movingAverage1 + '</td><td>' + json[i].movingAverage2 + '</td><td>' + json[i].nrOfIntersections + '</td><td onclick="GenerateGraph(gekkoResultsJson[' + i + '])">' + json[i].result.toPrecision(5) + ' %</td></tr>';
+                }
             }
             html += '</tbody></table>';
             resultsDiv.append(html);
@@ -176,7 +178,7 @@
 
 
                   {
-                      digitsAfterDecimal: 4,
+                      digitsAfterDecimal: 6,
                       showRangeSelector: true,
                       title: "Relative return on investment over time"
 
