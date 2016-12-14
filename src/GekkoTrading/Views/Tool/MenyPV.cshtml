@@ -29,11 +29,11 @@
         {
             if (item.Id == Model.ActiveInstrument)
             {
-                <li><a href="/Tool/MA/@item.Id" class="list-group-item active">@item</a></li>
+                <li><a href="/Tool/MA/@item.Id" class="list-group-item active">@item.InstrumentName</a></li>
             }
             else
             {
-                <li><a href="/Tool/MA/@item.Id" class="list-group-item">@item</a></li>
+                <li><a href="/Tool/MA/@item.Id" class="list-group-item">@item.InstrumentName</a></li>
             }
         }
     </ul>
