@@ -1,26 +1,73 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using GekkoTrading.Models
 
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+
+@model LoginViewModel
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <form asp-area="" asp-controller="Account" asp-action="LogOff" style="padding-right:20px; font-size:medium" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">@UserManager.GetUserName(User)</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log off</button>
-            </li>
-        </ul>
-    </form>
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right" style="font-size:medium">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-    </ul>
+<a href="#" data-toggle="modal" data-target="#login-modal" class="btn navbar-btn btn-ghost" style="font-family: 'Raleway', sans-serif;"><i class="fa fa-sign-in"></i>Sign in</a>
+
+<div id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog modal-sm clickable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="Login" class="modal-title">Sign in</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <input asp-for="Email" id="email_modal" type="text" placeholder="email" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Password" id="password_modal" type="password" placeholder="password" class="form-control">
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="RememberMe">
+                                <input asp-for="RememberMe" />
+                                @Html.DisplayNameFor(m => m.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                    <p class="text-center">
+                        <button type="submit" class="btn btn-primary" style="font-family: 'Raleway', sans-serif;"><i class="fa fa-sign-in"></i> Sign in</button>
+                    </p>
+                    <p class="text-center text-muted">Or sign in using...</p>
+                </form>
+                @{
+                    var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                        <p class="text-center">
+                            <img src="~/images/google-logo.png" style="max-width:40px; padding-right:10px" />
+
+                            @foreach (var provider in loginProviders)
+                            {
+
+                                <button type="submit" class="btn btn-default" style="font-family: 'Raleway', sans-serif;" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                            }
+                        </p>
+                    </form>
+                }
+
+                <p class="text-center text-muted">
+                    Not
+                    <a asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">registred</a> yet? Or did you
+                    <a asp-controller="Account" asp-action="ForgotPassword">forget your password?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

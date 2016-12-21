@@ -1,0 +1,144 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewData["Title"] | GekkoTrading</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="~/multi/css/bootstrap.min.css">
+    <!-- Fonts-->
+    <link rel="stylesheet" href="~/multi/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/multi/css/pe-icon-7-stroke.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Lightbox-->
+    <link rel="stylesheet" href="~/multi/css/lightbox.min.css">
+    <!-- Theme stylesheet-->
+    <link rel="stylesheet" href="~/multi/css/style.green.css" id="theme-stylesheet">
+    <!-- Custom stylesheet-->
+    <link rel="stylesheet" href="~/multi/css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="~/images/gekko.png">
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+</head>
+<body>
+    <header class="header">
+        <div role="navigation" class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a asp-controller="Home" asp-action="Index" class="navbar-brand" style="font-size:xx-large">Gekko.</a>
+                    <div class="navbar-buttons">
+                        <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle navbar-btn">Menu<i class="fa fa-align-justify"></i></button>
+                    </div>
+                </div>
+                <div id="navigation" class="collapse navbar-collapse navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Tools<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Tool" asp-action="MA">Moving Average</a></li>
+                                <li><a asp-controller="Tool" asp-action="MA">Relative Strength Index</a></li>
+                                <li><a asp-controller="Tool" asp-action="MA">On Balance Volume</a></li>
+                                <li><a asp-controller="Tool" asp-action="MA">Bollinger Band</a></li>
+                                <li><a asp-controller="Tool" asp-action="MA">Fibbonaci Retracement</a></li>
+                            </ul>
+                        <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
+                        <li><a asp-controller="Home" asp-action="About">About us</a></li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-user fa-1"></i>@UserManager.GetUserName(User)<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-action="Index" asp-controller="Manage">Settings</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#logOff-modal">Sign out</a></li>
+                                </ul>
+                            </li>
+
+                        }
+                        @if (!SignInManager.IsSignedIn(User))
+                        {
+                            @await Html.PartialAsync("_LoginPartial")
+                        }
+                    </ul>
+
+                    <div id="logOff-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" class="modal fade">
+                        <div class="modal-dialog modal-sm clickable" >
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                                    <h4 id="Login" class="modal-title">Are you sure?</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form asp-controller="Account" asp-action="LogOff" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                                        
+                                     <p class="text-center">
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-sign-out"></i> Sign out</button>
+                                        </p>
+                                        </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <hr />
+        @RenderBody()
+    </div>
+    <footer class="footer">
+        <div class="footer__block" style="padding-top:30px; padding-bottom:5px">
+            <div class="container" style="padding-left:25px; padding-right:25px">
+                <div class="row">
+                    <div class="col-md-8 col-sm-12">
+                        <h4 class="heading">About Gekko Trading</h4>
+                        <p style="width:75%">This is a conceptual site made for a graduation project during the Academy C#.NET-course for the fall of 2016. The site is not intended for real use.</p>
+                        <h4 class="heading">News and Updates</h4>
+                        <p>Sign up to get the latest Gekko-gossip.</p>
+                        <form class="footer__newsletter">
+                            <div class="input-group" style="width:60%">
+                                <input type="text" placeholder="Enter your email" class="form-control"><span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-send"></i></button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <h4 class="heading">Contact us</h4>
+                        <h5>Stockholm</h5>
+                        <p> Borgarfjorsgatan 4<br />164 55 Kista<br />tel: +46 123 456 789<br />e-mail: gekkotradingapp@gmail.com</p>
+                        <p class="social social--big"><a href="#" data-animate-hover="pulse" class="external facebook"><i class="fa fa-facebook"></i></a><a href="#" data-animate-hover="pulse" class="external twitter"><i class="fa fa-twitter"></i></a><a href="#" data-animate-hover="pulse" class="email"><i class="fa fa-envelope"></i></a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy;2016 GekkoTrading</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="~/multi/js/bootstrap.min.js"></script>
+    <script src="~/multi/js/jquery.cookie.js"> </script>
+    <script src="~/multi/js/lightbox.min.js"></script>
+    <script src="~/multi/js/front.js"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

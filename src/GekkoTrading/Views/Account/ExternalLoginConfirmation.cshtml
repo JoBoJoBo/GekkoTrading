@@ -3,8 +3,8 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>@ViewData["Title"].</h2>
-<h3>Associate your @ViewData["LoginProvider"] account.</h3>
+<h2>@ViewData["Title"]</h2>
+<p class="lead">Associate your @ViewData["LoginProvider"] account.</p>
 
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
     <h4>Association Form</h4>

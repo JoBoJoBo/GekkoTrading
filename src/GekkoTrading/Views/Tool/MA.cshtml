@@ -1,5 +1,9 @@
 ﻿@using GekkoTrading.Models.Entities
 @model MovingAverageVM
+
+@{
+    ViewData["Title"] = "Moving Averages";
+}
 <style>
     .centeredmodal {
         min-height: 100%; /* Fallback for browsers do NOT support vh unit */
@@ -11,99 +15,101 @@
     }
 </style>
 
-<div class="row">
-    <div class="col-sm-4 col-md-3 col-lg-2">
-        @{
-            string[] meny = { "Gold", "Silver", "Platinum", "Bananerr" };
-            Html.RenderPartial("MenyPV", Model);
-        }
-    </div>
-    <div class="col-sm-4 col-md-5 col-lg-6">
-        <br />
+<section style="padding-top:20px; padding-bottom:20px;">
+    <div class="container">
+        <h2>Moving Averages</h2>
+        <div class="row">
+            <div class="col-sm-4 col-md-3 col-lg-2">
+                @{
+                    string[] meny = { "Gold", "Silver", "Platinum", "Bananerr" };
+                    Html.RenderPartial("MenyPV", Model);
+                }
+            </div>
+            <div class="col-sm-4 col-md-5 col-lg-6">
+                <form>
+                    <input asp-for="ActiveInstrument" type="hidden" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
+                                <label asp-for="StartDate"></label><br />
+                                <input type="date" asp-for="StartDate" class="form-control" max="2016-11-22" min="2016-05-23" />
+                                <span asp-validation-for="StartDate"></span>
+                            </div>
+                            <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
+                                <label asp-for="EndDate"></label><br />
+                                <input type="date" asp-for="EndDate" class="form-control" max="2016-11-22" min="2016-05-23" />
+                                <span asp-validation-for="EndDate">@ViewBag.DateError</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="CandleDuration"></label><br />
+                                <select asp-for="CandleDuration" class="form-control">
+                                    <option>1</option>
+                                    <option>5</option>
+                                    <option>15</option>
+                                    <option>30</option>
+                                    <option>60</option>
+                                </select>
+                                <span asp-validation-for="CandleDuration"></span>
+                                <br />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="MovingAverage1"></label><br />
+                                <input placeholder="1-250" asp-for="MovingAverage1" class="form-control" />
+                                <span asp-validation-for="MovingAverage1"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="MovingAverage2"></label><br />
+                                <input placeholder="MA1-250" asp-for="MovingAverage2" class="form-control" />
+                                <span asp-validation-for="MovingAverage2">@ViewBag.MA2Error</span>
+                            </div>
+                            <br />
+                            <a data-toggle="collapse" href="#help">Show help</a>
+                            <input class="btn btn-default pull-right" type="button" value="Go" onclick="GenerateResult()" />
+                        </div>
+                    </div>
+                    <br />
+                </form>
+            </div>
 
-        <form>
-            <input asp-for="ActiveInstrument" type="hidden" />
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
-                        <label asp-for="StartDate"></label><br />
-                        <input type="date" asp-for="StartDate" class="form-control" max="2016-11-22" min="2016-05-23" />
-                        <span asp-validation-for="StartDate"></span>
-                    </div>
-                    <div class="form-group" data-toggle="tooltip" title="2016-05-23 - 2016-11-22">
-                        <label asp-for="EndDate"></label><br />
-                        <input type="date" asp-for="EndDate" class="form-control" max="2016-11-22" min="2016-05-23" />
-                        <span asp-validation-for="EndDate">@ViewBag.DateError</span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="CandleDuration"></label><br />
-                        <select asp-for="CandleDuration" class="form-control">
-                            <option>1</option>
-                            <option>5</option>
-                            <option>15</option>
-                            <option>30</option>
-                            <option>60</option>
-                        </select>
-                        <span asp-validation-for="CandleDuration"></span>
-                        <br />
-                    </div>
+            <div id="help" class="collapse" style="overflow:auto; max-height:240px; margin-bottom: 25px;">
+                <h4>Indicator description</h4>
+                <p>
+                    Moving averages is a tool which will help you compare...
+                </p>
+                <h4>Quick help:</h4>
+                <p>
+                    &bull;&nbsp; Select a start date.
+                    <br />
+                    &bull;&nbsp; Select an end date.
+                    <br />
+                    &bull;&nbsp; Select the duration of each candlestick. For example - a "Minutes per candle" of five means every candlestick is five minutes long. Each one will hold the average of each impending five minute period.
+                    <br />
+                    &bull;&nbsp; Select the first moving average (MA1) to be compared to the second moving average.
+                    <br />
+                    &bull;&nbsp; Select the second moving average (MA2).
+                    <br />
+                    When you click Go, every combination from one to your set MA1 will be compared to the set MA1 to the set MA2.
+                    So if you set MA1 to 2 and MA2 to 4 you will get the results from MA1-1 vs MA2-2, MA1-1 vs MA2-3, MA1-1 vs MA2-4 etc up to MA1-2 vs MA2-4.
+                </p>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
+                    <img src="~/images/ring (1).gif" class="center-block" />
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="MovingAverage1"></label><br />
-                        <input placeholder="1-250" asp-for="MovingAverage1" class="form-control" />
-                        <span asp-validation-for="MovingAverage1"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="MovingAverage2"></label><br />
-                        <input placeholder="MA1-250" asp-for="MovingAverage2" class="form-control" />
-                        <span asp-validation-for="MovingAverage2">@ViewBag.MA2Error</span>
-                    </div>
-                    <br />
-                    <br />
-                    <input class="btn btn-default pull-right" type="button" value="Go" onclick="GenerateResult()" />
+                <div id="ResultsDiv" style="overflow:auto; max-height:320px">
                 </div>
             </div>
-            <br />
-        </form>
-    </div>
-    <a data-toggle="collapse" href="#help">Show help</a>
-
-    <div id="help" class="collapse" style="overflow:auto; max-height:300px; margin-bottom: 25px;">
-        <h4>Indicator description</h4>
-        <p>
-            Moving averages is a tool which will help you compare...
-        </p>
-        <h4>Quick help:</h4>
-        <p>
-            &bull;&nbsp; Select a start date.
-            <br />
-            &bull;&nbsp; Select an end date.
-            <br />
-            &bull;&nbsp; Select the duration of each candlestick. For example - a "Minutes per candle" of five means every candlestick is five minutes long. Each one will hold the average of each impending five minute period.
-            <br />
-            &bull;&nbsp; Select the first moving average (MA1) to be compared to the second moving average.
-            <br />
-            &bull;&nbsp; Select the second moving average (MA2).
-            <br />
-            When you click Go, every combination from one to your set MA1 will be compared to the set MA1 to the set MA2.
-            So if you set MA1 to 2 and MA2 to 4 you will get the results from MA1-1 vs MA2-2, MA1-1 vs MA2-3, MA1-1 vs MA2-4 etc up to MA1-2 vs MA2-4.
-        </p>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-md-6">
-        <div id="spinningGekko" style="display:none" class="modal centeredmodal center-block">
-            <img src="~/images/ring.gif" class="center-block" />
-        </div>
-        <div id="ResultsDiv" style="overflow:auto; max-height:320px">
+            <div class="col-md-6">
+                <div id="GraphDiv" class=""></div>
+            </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div id="GraphDiv" class=""></div>
-    </div>
-</div>
+</section>
 
 
 <script src="~/js/dygraph-combined.js"></script>
@@ -180,8 +186,7 @@
                   {
                       digitsAfterDecimal: 6,
                       showRangeSelector: true,
-                      title: "Relative return on investment over time"
-
+                      title: "Return on Investment"
                   }
 
               );
